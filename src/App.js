@@ -10,7 +10,9 @@ function App() {
   // const eventRef = db.ref("events")
   // const eventsss = 
   const [events, setEvent] = useState([])
+  const [roomName, setRoomName] = useState([])
   const eventNameRef = useRef()
+  const userName = useRef()
   const db = firebase.database()
   const eventRef = db.ref("events")
 
@@ -27,19 +29,29 @@ function App() {
       }
     })
   },[])
-
-  
+ 
+  function check(name){
+    let list = events
+    if (list.length ==0){return true}
+    for ( let i =0; i < list.length;i++){
+      if(list[i].name == name){
+        console.log("inn")
+        return false
+      }
+    return true
+  }
+}
   // Add new event
   function addEvent(){
     const name = eventNameRef.current.value
-    if (name !== ""){
-      setEvent([...events,{id:uuidv1()   ,name: name}] )
+    if (name !== "" && check(name) ){
+      setEvent([...events,{id:uuidv1(),name: name,chat: ["test"]}] )
     }
+    eventNameRef.current.value = null
   }
 
   // Delete event function
   function deleteEvent(id){
-    console.log("ditme")
     let list = events
     for ( let i =0; i < list.length;i++){
         if (list[i].id === id){
@@ -50,7 +62,22 @@ function App() {
         }
     }
 }
+ function Room(){
+  const roomName = userName.current.value
+  setRoomName(roomName)
 
+ }
+ function Chat(id,chat){
+  let list = events
+  for ( let i =0; i < list.length;i++){
+      if (list[i].id === id){
+          list[i].chat.push(chat)
+          console.log(list)
+          setEvent([...list])
+          break
+      }
+  }
+ }
 
   // Sent new data to firebase
   useEffect(()=>{
@@ -64,7 +91,9 @@ function App() {
     <div className="App">
       <input ref={eventNameRef} type="text"/>
       <button onClick= {addEvent}> Add events</button>
-      <Events events = {events} deleteEvent = {deleteEvent}></Events>
+      <input ref={userName} type ="text"/>  
+      <button onClick= {Room}> Room </button>
+      <Events Chat= {Chat} events = {events} deleteEvent = {deleteEvent} roomName = {roomName} ></Events>
     </div>
   );
 }
