@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+import {BrowserRouter as Router,Switch,Route,withRouter} from 'react-router-dom'
+import Room from './Room'
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Router>
+    <Switch>
+    <Route exact path="/room/:name" component= {Room}></Route>
+    <Route exact path="/" component={App}></Route>
+    </Switch>
+  </Router>,
   document.getElementById('root')
 );
 
